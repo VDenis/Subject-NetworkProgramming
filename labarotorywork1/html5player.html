@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+	<body>
+		<h1> Html5 Video player</h1>
+		<p>FIle: kinopoisk2013.mp4</p>
+
+		<div>
+			<!-- Html5 video player. Browser play *.mp4 video, if he can't play with flash player, if 
+			he can't again he see "No video playback capabilities, please download the video below"--->
+			<video id="videoPlayer" width="640"   poster="kinopoisk2013.png">
+				<source src="kinopoisk2013.mp4" type="video/mp4" />
+				<object width="640"  type="application/x-shockwave-flash" data="jwplayer.swf">
+					<param name="movie" value="jwplayer.swf" />
+					<param name="flashvars" value="controlbar=over&amp;image=kinopoisk2013.png&amp;file=kinopoisk2013.mp4" />
+					<img src="kinopoisk2013.png" width="640" height="360" alt="kinopoisk2013"
+						 title="No video playback capabilities, please download the video below" />
+				</object>
+			</video>
+			<br>
+				<div>
+					<!-- Buttons -->
+					<input type="button" id="playPauseButton" value="Play"/>
+					<input type="button" id="makeMuteButton" value="Mute"/>
+					<br>
+					<!-- Volume Bar -->
+					<input id="volumeBar" min="0" max="1" step="0.1" type="range" />
+					<br>
+					<!-- Progress Bar-->
+					<div id="newprogressBar" style="border:1px solid #aaa; color:#fff; width:295px; height:20px;"><span id="newprogress" style="background-color:#ff0000; height:20px; display:inline-block;"></span></div>
+					<br>
+					<span>
+						<span id="videoCurrent">00:00</span>
+						<span id="videoDuration">00:00</span>
+					</span>
+				</div>				
+			<p>	<strong>Download Video:</strong>
+				Closed Format:	<a href="kinopoisk2013.mp4">"MP4"</a>
+			</p>
+		</div> 
+
+	<script> 
+		// Обертываем код в функцию для защиты пространства имен
+		(function() {
+			// Find the DOM objects
+			var  video = document.getElementById("videoPlayer"),
+			playBtn = document.getElementById("playPauseButton"),
+			muteBtn = document.getElementById("makeMuteButton"),
+			current = document.getElementById("videoCurrent"),
+			duration = document.getElementById("videoDuration");			
+			
+			progressBar = document.getElementById("progBar");
+			
+			volumeBar = document.getElementById("volumeBar");
+			newprogressBar = document.getElementById("newprogressBar");
+			newprogress = document.getElementById("newprogress");
+
+
+			
+			// Переключаем состояние "Play/Pause" при нажитии на кнопку 
+			playBtn.addEventListener("click", function() {
+				playPause();
+			}, false);
+			
+			// Переключаем состояние "Play/Pause" при нажитии на видео
+			video.addEventListener("click", function() {
+				playPause();
+			}, false);
+
+			function playPause() 
+			{
+				if (video.paused || video.ended)
+				{
+					video.play();
+					playBtn.value = "Pause";
+				} else {
+					video.pause();
+					playBtn.value = "Play";
+				}				
+			}			
+
+
+
+
+
+
+
+			// Регулировка звука
+			volumeBar.addEventListener("click", function() {
+				video.volume = volumeBar.value;
+			}, false);
+			
+			// Переключаем состояние "Mute/Unmute"
+			muteBtn.addEventListener("click", function() {
+				if (video.muted) 
+				{
+					video.muted = false;
+					muteBtn.value = "Mute";
+				} else 
+				{
+					video.muted = true;
+					muteBtn.value = "Unmute";
+				}
+			}, false);			
+					
+			video.addEventListener("ended", function() {
+				video.pause();
+				playBtn.value = "Play";
+			}, false);			
+
+
+
+
+
+
+			
+			// Показываем длительность, когда это становится возможным
+			video.addEventListener("loadedmetadata", function() {
+				duration.innerHTML = formatTime(video.duration);
+			}, false);
+
+			// Обновляем текущее время видео
+			video.addEventListener("timeupdate", function() {
+				current.innerHTML = formatTime(video.currentTime);
+				updateProgress()				
+			}, false);
+
+			function formatTime(time) {
+				var minutes = Math.floor(time / 60) % 60,
+				seconds = Math.floor(time % 60);
+				return   (minutes < 10 ? '0' + minutes : minutes) + ':' +  (seconds < 10 ? '0' + seconds : seconds);
+			}
+			
+			newprogressBar.addEventListener('click', function(event) {
+				width = parseFloat(newprogressBar.style.width);
+				var x = event.offsetX / width;
+				video.currentTime = x * video.duration;
+			}, false);	
+			
+			function updateProgress() {
+				
+				var value = 0;
+				if (video.currentTime > 0)
+				{
+					value = Math.floor((100 / video.duration) * video.currentTime);
+				}
+				newprogress.style.width = value + "%";
+			}
+				
+		})();
+	</script> 
+	
+	</body>
+</html>
