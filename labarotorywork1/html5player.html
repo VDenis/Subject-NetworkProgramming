@@ -133,8 +133,8 @@
 			
 			newprogressBar.addEventListener('click', function(event) {
 				width = parseFloat(newprogressBar.style.width);
-				var x = event.offsetX / width;
-				video.currentTime = x * video.duration;
+				var x = Math.round(video.duration) * (event.offsetX==undefined? event.layerX : event.offsetX);
+				video.currentTime = Math.round(x / width);
 			}, false);	
 			
 			function updateProgress() {
