@@ -13,6 +13,8 @@ Repository for the laboratory works on network programming.
 Проигрыватель проигрывает *.mp4 файл и реализовывает свои кнопки управления, не входящие в
 тег <video controls> htm5. Написан на Html5+JS
 
+		Языки программирования:
+Html5 + JS
 
 
 		Управление:
